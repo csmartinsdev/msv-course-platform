@@ -1,0 +1,89 @@
+## GENERAL ##
+server:
+  port: 8081
+  error:
+    include-message: always
+    include-binding-errors: always
+    servlet:
+      context-path: ${SERVER_SERVLET_CONTEXT_PATH:/api-courses}
+      session:
+        timeout: 86400 #24hours
+
+logging:
+  level:
+    br:
+      com:
+        smartinsoft:
+          config:
+            feign:
+              client: DEBUG
+
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+## JWT
+jwt:
+  secret:
+  expiration:
+    accessToken: ${JWT_EXPIRATION_ACCESS_TOKEN:900000} # 15min Duration
+    refreshToken: ${JWT_EXPIRATION_REFRESH_TOKEN:28800000} # 8hours Duration
+
+
+spring:  ## Default connection pool
+  datasource:
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5
+      poolName: springBootJPAHikariCP
+      maxLifetime: 2000000
+
+    ## POSTGRESQL
+    url: ${DATABASE_URL:jdbc:postgresql://127.0.0.1:5433/course}
+    username: ${DATABASE_USER:dev}
+    password: ${DATABASE_PASSWORD:dev}
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: false
+        show_sql: false
+        ddl_auto: none
+
+  data:
+    web:
+      pageable:
+        max-page-size: 10000
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  #Config Session
+  initialization-mode: always
+  session:
+    store-type: jdbc
+    jdbc:
+      initialize-schema: never
+      table-name: digital.spr_session
+      schema: classpath:springSession.sql
+
+## Actuator
+management:
+  info:
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: info,metrics,health,status,threaddump
+
+info:
+  app:
+    name: @project.name@
+    description: @project.description@
+    version: @project.version@
+    encoding: @project.build.sourceEncoding@
+    java:
+      version: @java.version@

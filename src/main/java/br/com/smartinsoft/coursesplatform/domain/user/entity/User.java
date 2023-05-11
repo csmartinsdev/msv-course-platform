@@ -3,6 +3,7 @@ package br.com.smartinsoft.coursesplatform.domain.user.entity;
 import br.com.smartinsoft.coursesplatform.domain.role.entity.Role;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
@@ -66,6 +67,12 @@ public class User implements Serializable, UserDetails {
 
   @Column(name = "updated_date")
   private LocalDate updatedDate;
+
+  @Column(name = "token_email")
+  private String tokenEmail;
+
+  @Column(name = "token_email_date")
+  private LocalDateTime tokenEmailDate;
 
   @ManyToMany
   @JoinTable(name = "users_roles",

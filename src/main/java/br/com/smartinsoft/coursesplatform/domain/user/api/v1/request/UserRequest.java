@@ -2,6 +2,7 @@ package br.com.smartinsoft.coursesplatform.domain.user.api.v1.request;
 
 import br.com.smartinsoft.coursesplatform.config.validators.CpfValidation;
 import br.com.smartinsoft.coursesplatform.config.validators.EmailValidation;
+import br.com.smartinsoft.coursesplatform.domain.role.entity.Role;
 import br.com.smartinsoft.coursesplatform.domain.user.entity.User;
 import java.time.LocalDate;
 import java.util.List;
@@ -46,6 +47,13 @@ public class UserRequest implements UserRequested {
     return user;
   }
 
+  public void update(User user) {
+    user.setCpf(cpf);
+    user.setName(name);
+    user.setEmail(email);
+    user.setPassword(password);
+  }
+
   @Override
   public String toString() {
     return "UserRequest{" +
@@ -55,5 +63,10 @@ public class UserRequest implements UserRequested {
         ", password='" + password + '\'' +
         ", roles=" + roles +
         '}';
+  }
+
+  public void removeRolesForbidden() {
+    roles.remove(Role.OWNER);
+    roles.remove(Role.CUSTOMER);
   }
 }

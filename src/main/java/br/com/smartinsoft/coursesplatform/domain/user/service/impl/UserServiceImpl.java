@@ -15,6 +15,7 @@ import br.com.smartinsoft.coursesplatform.domain.user.api.v1.request.UserRequest
 import br.com.smartinsoft.coursesplatform.domain.user.api.v1.request.UserUpdateRequest;
 import br.com.smartinsoft.coursesplatform.domain.user.api.v1.response.UserResponse;
 import br.com.smartinsoft.coursesplatform.domain.user.entity.User;
+import br.com.smartinsoft.coursesplatform.domain.user.listener.event.TokenEmailEvent;
 import br.com.smartinsoft.coursesplatform.domain.user.listener.event.UserCreatedEmailEvent;
 import br.com.smartinsoft.coursesplatform.domain.user.repository.UserRepository;
 import br.com.smartinsoft.coursesplatform.domain.user.service.UserService;
@@ -70,7 +71,6 @@ public class UserServiceImpl implements UserService {
     User user = validate(request);
     if (user == null) {
       user = request.converter();
-
     } else {
       request.update(user);
     }
@@ -156,8 +156,21 @@ public class UserServiceImpl implements UserService {
       if (!StringUtils.isBlank(user.getOwnerExternalId())) {
         throw new BusinessException(messageProperty.getProperty("error.owner.canAccess"));
       }
+      String token = jwtTokenServiceImpl.genToken();
 
+      user.setTokenEmail(passwordEncoder.encode(token));
+      user.setTokenEmailDate(LocalDateTime.now().plusMinutes(30));
+      userRepository.save(user);
+
+      this.publisher.publishEvent(new TokenEmailEvent(user, token));
+
+      return ApiServiceResponse.builder()
+          .id((long) HttpStatus.OK.value())
+          .message(messageProperty.getProperty("success.token.sendEmail"))
+          .build();
     }
+    throw new ResourceNotFoundException(messageProperty.getProperty("error.notFound",
+        messageProperty.getProperty("user")));
   }
   @Override
   public ApiServiceResponse validateToken(TokenValidationRequest request) {

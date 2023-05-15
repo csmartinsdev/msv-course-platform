@@ -43,26 +43,19 @@ import org.springframework.util.CollectionUtils;
 @Service
 public class UserServiceImpl implements UserService {
   @Autowired
+  private UserRepository userRepository;
+  @Autowired
   private MessageProperty messageProperty;
-
   @Autowired
   private PasswordEncoder passwordEncoder;
-
   @Autowired
   private JwtTokenServiceImpl jwtTokenServiceImpl;
-
   @Autowired
-  private UserLoggedBean userLoggedBean;
-
+  private UserLoggedBean userLogged;
   @Autowired
   private BeanUtilsNotNull beanUtilsNotNull;
-
-  @Autowired
-  private UserRepository userRepository;
-
   @Autowired
   private RoleRepository roleRepository;
-
   @Autowired
   private ApplicationEventPublisher publisher;
 
@@ -91,7 +84,7 @@ public class UserServiceImpl implements UserService {
     user = userRepository.save(user);
 
     if (!isOwner) {
-      user.setOwner(populateUserComposition(new User(userLoggedBean.getOwnerExternalId())));
+      user.setOwner(populateUserComposition(new User(userLogged.getOwnerExternalId())));
       this.publisher.publishEvent(new UserCreatedEmailEvent(user));
     }
 
@@ -99,7 +92,6 @@ public class UserServiceImpl implements UserService {
         .build()
         .converter(user);
   }
-
   @Transactional
   public UserResponse createOwner(UserOwnerRequest request) {
     UserRequest userRequest = request.converter();
@@ -146,7 +138,6 @@ public class UserServiceImpl implements UserService {
         messageProperty.getProperty("user")));
 
   }
-
   @Override
   public ApiServiceResponse sendToken(TokenRequest request) {
     Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
@@ -189,10 +180,9 @@ public class UserServiceImpl implements UserService {
     }
     throw new ResourceNotFoundException(messageProperty.getProperty("error.token.invalid"));
   }
-
   private void validateUseCannotAccessUser(User user) {
-    if (!StringUtils.isBlank(userLoggedBean.getOwnerExternalId()) &&
-        !userLoggedBean.getOwnerExternalId().equals(user.getOwnerExternalId())) {
+    if (!StringUtils.isBlank(userLogged.getOwnerExternalId()) &&
+        !userLogged.getOwnerExternalId().equals(user.getOwnerExternalId())) {
       throw new AccessDeniedException(messageProperty.getProperty("error.cannotAccess",
           messageProperty.getProperty("user")));
     }

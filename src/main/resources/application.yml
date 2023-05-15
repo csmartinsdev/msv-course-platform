@@ -1,13 +1,13 @@
 ## GENERAL ##
 server:
-  port: 8081
+  port: 8082
   error:
     include-message: always
     include-binding-errors: always
-    servlet:
-      context-path: ${SERVER_SERVLET_CONTEXT_PATH:/api-courses}
-      session:
-        timeout: 86400 #24hours
+  servlet:
+    context-path: ${SERVER_SERVLET_CONTEXT_PATH:/api-courses}
+    session:
+      timeout: 86400 #24hours
 
 logging:
   level:
@@ -40,7 +40,7 @@ spring:  ## Default connection pool
       maxLifetime: 2000000
 
     ## POSTGRESQL
-    url: ${DATABASE_URL:jdbc:postgresql://127.0.0.1:5433/course}
+    url: ${DATABASE_URL:jdbc:postgresql://127.0.0.1:5433/smartinsoft-courses}
     username: ${DATABASE_USER:dev}
     password: ${DATABASE_PASSWORD:dev}
 
@@ -66,8 +66,8 @@ spring:  ## Default connection pool
     store-type: jdbc
     jdbc:
       initialize-schema: never
-      table-name: digital.spr_session
-      schema: classpath:springSession.sql
+      table-name: platform.spr_session
+      schema: classpath:springSession.sql.sql
 
 ## Actuator
 management:

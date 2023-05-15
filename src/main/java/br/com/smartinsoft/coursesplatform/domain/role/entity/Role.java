@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "roles", schema = "courses")
+@Table(name = "roles", schema = "platform")
 @Data
 public class Role implements Serializable {
   private static final long serialVersionUID = 694513343542890409L;

@@ -28,7 +28,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Data
-@Table(name = "users", schema = "courses", uniqueConstraints = {
+@Table(name = "users", schema = "platform", uniqueConstraints = {
     @UniqueConstraint(name = "cpf_unique", columnNames = { "cpf" }),
     @UniqueConstraint(name = "email_unique", columnNames = {"email"}),
     @UniqueConstraint(name = "external_id_unique", columnNames = {"external_id"})
@@ -54,11 +54,11 @@ public class User implements Serializable, UserDetails {
 
   @Column(name = "cpf")
   private String cpf;
-
+  @Column(name = "name")
+  private String name;
   @Column(name = "email")
   private String email;
-
-  private String name;
+  @Column(name = "password")
   private String password;
   private boolean active;
 

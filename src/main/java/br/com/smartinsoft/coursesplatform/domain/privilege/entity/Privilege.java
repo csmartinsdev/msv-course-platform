@@ -10,7 +10,7 @@ import javax.persistence.Table;
 import lombok.Data;
 
   @Entity
-  @Table(name = "privileges", schema = "digital")
+  @Table(name = "privileges", schema = "platform")
   @Data
 public class Privilege implements Serializable {
   private static final long serialVersionUID = 5067155471500532602L;

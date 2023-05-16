@@ -25,7 +25,7 @@ springdoc:
 
 ## JWT
 jwt:
-  secret:
+  secret: $2a$12$ph1vmPRIev6LQAN5qCf5XuL8yn.EII3h7N9nvOtjMHJj7l5Cytdg6
   expiration:
     accessToken: ${JWT_EXPIRATION_ACCESS_TOKEN:900000} # 15min Duration
     refreshToken: ${JWT_EXPIRATION_REFRESH_TOKEN:28800000} # 8hours Duration

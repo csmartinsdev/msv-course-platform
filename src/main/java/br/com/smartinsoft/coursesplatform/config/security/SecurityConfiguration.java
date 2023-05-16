@@ -39,7 +39,8 @@ public class SecurityConfiguration extends GlobalMethodSecurityConfiguration {
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/actuator/**",
-            "/**/auth/**")
+            "/**/auth/**",
+            "**/user/owner/**")
         .permitAll()
         .anyRequest()
         .authenticated()

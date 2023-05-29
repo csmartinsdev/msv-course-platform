@@ -1,0 +1,50 @@
+
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern> %green(%date) %highlight(%-5level) %yellow([%-4relative]) %magenta([%thread]) %cyan(%logger{10}) %white([%file:%line]) %blue(: %msg%n)</pattern>
+      <charset>UTF-8</charset>
+    </encoder>
+  </appender>
+  <appender name="GELF" class="de.siegmar.logbackgelf.GelfUdpAppender">
+    <graylogHost>graylog.smartinsoft.cloud</graylogHost>
+    <if condition='!"www.smartinsoft.com.br".equalsIgnoreCase(property("ENVIRONMENT_URL"))'>
+      <then>
+        <graylogPort>1555</graylogPort>
+      </then>
+      <else>
+        <graylogPort>3555</graylogPort>
+      </else>
+    </if>
+    <maxChunkSize>508</maxChunkSize>
+    <useCompression>true</useCompression>
+    <encoder class="de.siegmar.logbackgelf.GelfEncoder">
+      <includeRawMessage>false</includeRawMessage>
+      <includeMarker>true</includeMarker>
+      <includeMdcData>true</includeMdcData>
+      <includeCallerData>false</includeCallerData>
+      <includeRootCauseData>false</includeRootCauseData>
+      <includeLevelName>false</includeLevelName>
+      <shortPatternLayout class="ch.qos.logback.classic.PatternLayout">
+        <pattern>%m%nopex</pattern>
+      </shortPatternLayout>
+      <fullPatternLayout class="ch.qos.logback.classic.PatternLayout">
+        <pattern>%m%n</pattern>
+      </fullPatternLayout>
+      <staticField>app_name:msv-administration</staticField>
+      <staticField>os_arch:${os.arch}</staticField>
+      <staticField>os_name:${os.name}</staticField>
+      <staticField>os_version:${os.version}</staticField>
+    </encoder>
+  </appender>
+  <root level="INFO">
+    <appender-ref ref="STDOUT" />
+  </root>
+  <logger name="br.com.pst.administration">
+    <appender-ref ref="GELF" />
+  </logger>
+  <logger name="com.logging.springboot2graylog.interceptor.RestControllerInterceptor" additivity="false">
+    <level value="DEBUG"/>
+    <appender-ref ref="GELF" />
+  </logger>
+</configuration>

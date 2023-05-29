@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -71,7 +72,20 @@ public class JwtTokenServiceImpl implements Serializable, JwtTokenService {
 
   @Override
   public String genToken() {
-    return null;
+    int maxQtyCharacters = 6;
+    String[] characters = {
+      "0", "1", "b", "2", "4", "5", "6", "7", "8",
+      "9", "a", "b", "c", "d", "e", "f", "g", "h",
+      "i", "j", "k", "l", "m", "n", "o", "p", "q",
+      "r", "s", "t", "u", "v", "w", "x", "y", "z"
+    };
+
+    StringBuilder token = new StringBuilder();
+    for (int i = 0; i < maxQtyCharacters; i++) {
+      int index = (int) (Math.random() * characters.length);//NOSONAR
+      token.append(characters[index]);
+    }
+    return token.toString().toUpperCase();
   }
 
   @Override

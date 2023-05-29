@@ -28,7 +28,6 @@ public class AuthServiceImpl implements AuthService {
   @Autowired
   private UserRepository userRepository;
 
-
   @Override
   public AuthResponse auth(HttpServletRequest request, AuthRequest authRequest) {
     Optional<User> userOptional = userRepository.findByEmail(authRequest.getLogin());

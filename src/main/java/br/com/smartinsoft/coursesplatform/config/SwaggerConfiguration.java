@@ -10,5 +10,5 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @SecurityScheme(name = "X-Authorization", type = SecuritySchemeType.HTTP, bearerFormat = "JWT", scheme = "bearer")
-@OpenAPIDefinition(info = @Info(title = "api-msv-course-platform"), security = @SecurityRequirement(name = "X-Authorization"))
+@OpenAPIDefinition(info = @Info(title = "api-msv-course-platform"), security = @SecurityRequirement(name = "Authorization"))
 public class SwaggerConfiguration { }

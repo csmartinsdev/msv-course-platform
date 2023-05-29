@@ -15,8 +15,8 @@ import javax.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "roles", schema = "platform")
 @Data
+@Table(name = "roles", schema = "platform")
 public class Role implements Serializable {
   private static final long serialVersionUID = 694513343542890409L;
 
@@ -31,7 +31,7 @@ public class Role implements Serializable {
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(name = "roles_privileges",
-      schema = "courses",
+      schema = "platform",
       joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
       inverseJoinColumns = @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
   private Set<Privilege> privileges;

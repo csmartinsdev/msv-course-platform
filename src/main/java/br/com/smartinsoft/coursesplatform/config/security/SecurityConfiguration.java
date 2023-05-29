@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -34,27 +35,18 @@ public class SecurityConfiguration extends GlobalMethodSecurityConfiguration {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.authorizeRequests()
-        .antMatchers(
-            "/**.html",
+        .antMatchers("/**.html",
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/actuator/**",
             "/**/auth/**",
-            "**/user/owner/**")
-        .permitAll()
-        .anyRequest()
-        .authenticated()
-        .and()
-        .httpBasic()
-        .and()
-        .csrf()
-        .disable()
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-        .cors()
-        .and()
-        .addFilterBefore(authenticationUserRequestFilter, BasicAuthenticationFilter.class)
+            "/**/user/owner/**").permitAll()
+        .anyRequest().authenticated()
+        .and().httpBasic()
+        .and().csrf().disable()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and().cors()
+        .and().addFilterBefore(authenticationUserRequestFilter, BasicAuthenticationFilter.class)
         .exceptionHandling()
         .authenticationEntryPoint((request, response, exception) ->
             response.sendError(HttpStatus.UNPROCESSABLE_ENTITY.value(), exception.getMessage()));
@@ -62,9 +54,10 @@ public class SecurityConfiguration extends GlobalMethodSecurityConfiguration {
     return http.build();
   }
 
+
   @Bean
   public WebMvcConfigurer corsConfigurer() {
-    return new WebMvcConfigurer() {
+     return new WebMvcConfigurer() {
       @Override
       public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
@@ -83,5 +76,10 @@ public class SecurityConfiguration extends GlobalMethodSecurityConfiguration {
   @Bean
   public UserDetailsManager authenticateUsers() {
     return new InMemoryUserDetailsManager();
+  }
+
+  @Override
+  public MethodSecurityExpressionHandler createExpressionHandler() {
+    return new CustomMethodSecurityExpressionHandler();
   }
 }

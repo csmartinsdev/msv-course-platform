@@ -76,7 +76,7 @@ public class User implements Serializable, UserDetails {
 
   @ManyToMany
   @JoinTable(name = "users_roles",
-      schema = "courses",
+      schema = "platform",
       joinColumns = @JoinColumn(name = "user_external_id", referencedColumnName = "external_id"),
       inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
   private Set<Role> roles;
